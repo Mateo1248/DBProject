@@ -32,7 +32,7 @@ public class LoginFrame extends JFrame implements ActionListener {
 	LoginFrame() {
 		super("COMPUTER SHOP");
 		setResizable(false);
-		setBounds(400,400,500,320);
+		setBounds(700,300,500,320);
 		setLayout(null);
 		getContentPane().setBackground(Color.LIGHT_GRAY);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

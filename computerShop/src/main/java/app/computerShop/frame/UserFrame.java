@@ -15,7 +15,7 @@ public abstract class UserFrame extends JFrame {
 		super(title);
 		this.connection = connection;
 		setResizable(false);
-		setBounds(400,400,1000,600);
+		setBounds(700,300,1000,600);
 		setLayout(null);
 		getContentPane().setBackground(Color.LIGHT_GRAY);
 		setVisible(true);

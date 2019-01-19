@@ -19,7 +19,7 @@ public class CreateClientFrame extends JFrame implements ActionListener{
 	CreateClientFrame() {
 		super("CLIENT REGISTRATION");
 		setResizable(false);
-		setBounds(400,400,500,410);
+		setBounds(700,300,500,410);
 		setLayout(null);
 		getContentPane().setBackground(Color.LIGHT_GRAY);
 	
