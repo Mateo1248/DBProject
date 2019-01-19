@@ -4,10 +4,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
 
-public class ClientFrame extends UserFrame implements ActionListener {
+public class ClientFrame extends UserFrame {
 
 	ClientFrame(Connection connection) {
-		super("CLIENT", connection);
+		super("KLIENT", connection);
 		// TODO Auto-generated constructor stub
 	}
 

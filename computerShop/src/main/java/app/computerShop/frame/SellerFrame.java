@@ -2,12 +2,13 @@ package app.computerShop.frame;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 import java.sql.Connection;
 
-public class SellerFrame extends UserFrame implements ActionListener {
+public class SellerFrame extends UserFrame {
 
 	SellerFrame(Connection connection) {
-		super("SELLER", connection);
+		super("SPRZEDAWCA", connection);
 		// TODO Auto-generated constructor stub
 	}
 
@@ -16,5 +17,4 @@ public class SellerFrame extends UserFrame implements ActionListener {
 		// TODO Auto-generated method stub
 		
 	}
-
 }

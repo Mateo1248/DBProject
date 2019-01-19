@@ -6,7 +6,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -106,19 +108,26 @@ public class LoginFrame extends JFrame implements ActionListener {
 					Connection con = getConnection(login.getText(), password.getText(), "computershop");
 					System.out.println("connected successfull!");
 					
-					switch( userlevel.getSelectedIndex() ) {
-					
-					//admin
-					case 1 :
-						new AdminFrame(con);
-						break;
-					//seller
-					case 2 :
-						new SellerFrame(con);
-						break;
-					//client
-					case 3:
-						new ClientFrame(con);
+					if(userValidation(login.getText(), password.getText(), con, userlevel.getSelectedIndex())) {
+						System.out.println("user validation successfull!");
+						switch( userlevel.getSelectedIndex() ) {
+						
+						//admin
+						case 1 :
+							new AdminFrame(con);
+							break;
+						//seller
+						case 2 :
+							new SellerFrame(con);
+							break;
+						//client
+						case 3:
+							new ClientFrame(con);
+						}
+					}
+					else {
+						System.out.println("user validation unsuccessfull!");
+						JOptionPane.showMessageDialog(this,"Zły poziom uprawnień!","BŁĄD",JOptionPane.ERROR_MESSAGE);
 					}
 				} 
 				catch (ClassNotFoundException | SQLException e) {
@@ -136,9 +145,26 @@ public class LoginFrame extends JFrame implements ActionListener {
 
 	}
 	
+	
 	private Connection getConnection(String login, String password, String dbName) throws ClassNotFoundException, SQLException {
 		Class.forName( "com.mysql.cj.jdbc.Driver" );
 		String url = "jdbc:mysql://localhost/" + dbName + "?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
 		return DriverManager.getConnection( url, login, password);
+	}
+	
+	
+	private boolean userValidation(String login, String password, Connection con, int userlv) {
+		try {
+			String []lv = {"admin", "seller", "client"};
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT Level FROM users WHERE Login LIKE '" + login + "' AND Password LIKE '" + password + "'");
+			while(rs.next())
+				if(!rs.getString("Level").equals(lv[userlv-1])) {
+					con.close();
+					return false;
+				}
+		} 
+		catch (SQLException e) { e.printStackTrace(); }
+		return true;
 	}
 }
