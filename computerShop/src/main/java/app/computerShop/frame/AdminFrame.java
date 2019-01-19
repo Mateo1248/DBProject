@@ -2,13 +2,18 @@ package app.computerShop.frame;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
 import java.sql.Connection;
+import java.sql.SQLException;
 
-public class AdminFrame extends UserFrame implements ActionListener {
+import com.sun.glass.events.WindowEvent;
+
+public class AdminFrame extends UserFrame {
 
 	AdminFrame(Connection connection) {
-		super("ADMIN", connection);
+		super("ADMINISTRATOR", connection);
 		// TODO Auto-generated constructor stub
+		
 	}
 
 	@Override
@@ -16,5 +21,4 @@ public class AdminFrame extends UserFrame implements ActionListener {
 		// TODO Auto-generated method stub
 		
 	}
-
 }
