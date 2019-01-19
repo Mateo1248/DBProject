@@ -30,7 +30,7 @@ public class LoginFrame extends JFrame implements ActionListener {
 	}
 	
 	LoginFrame() {
-		super("COMPUTER SHOP");
+		super("SKLEP KOMPUTEROWY");
 		setResizable(false);
 		setBounds(700,300,500,320);
 		setLayout(null);
@@ -38,7 +38,7 @@ public class LoginFrame extends JFrame implements ActionListener {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		//add description
-		JLabel descLab = new JLabel("Welcome in our shop, log in or register if you didn't do it yet.");
+		JLabel descLab = new JLabel("Witaj w naszym sklepie, zaloguj się lub zarejestruj jesli jeszcze tego nie zrobiłeś.");
 		descLab.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
 		descLab.setBounds(0,20,484,30);
 		descLab.setHorizontalAlignment(JLabel.CENTER);
@@ -47,47 +47,50 @@ public class LoginFrame extends JFrame implements ActionListener {
 		//add picture
 		ImageIcon pcimg = new ImageIcon(new ImageIcon("img\\pcshop.png").getImage().getScaledInstance(210, 160, Image.SCALE_DEFAULT));
 		JLabel imglab=new JLabel();
-		imglab.setBounds(20,85,210,160);
+		imglab.setBounds(20,70,210,160);
 		imglab.setIcon(pcimg);
 	    add(imglab);
 	    
 	    
 	    JLabel l = new JLabel("Login:");
-	    l.setBounds(250,85,200,20);
+	    l.setBounds(250,70,200,20);
 	    add(l);
 	    
 	    login = new JTextArea();
 	    login.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
-	    login.setBounds(250,105,200,20);
+	    login.setBounds(250,90,200,25);
 	    add(login);
 		
 	    
-	    JLabel p = new JLabel("Password:");
-	    p.setBounds(250,125,200,20);
+	    JLabel p = new JLabel("Hasło:");
+	    p.setBounds(250,115,200,20);
 	    add(p);
 	    
 	    password = new JTextArea();
 	    password.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
-	    password.setBounds(250,145,200,20);
+	    password.setBounds(250,135,200,25);
 	    add(password);
 	    
+	    JLabel x = new JLabel("Poziom uprawnień:");
+	    x.setBounds(250,165,200,20);
+	    add(x);
 	    
-	    String []levels = {"select level...", "admin", "seller", "client"};
+	    String []levels = {"...", "administrator", "sprzedawca", "klient"};
 	    userlevel = new JComboBox<String>(levels);
-	    userlevel.setBounds(250,170,200,20);
+	    userlevel.setBounds(250,185,200,25);
 	    userlevel.setSelectedIndex(0);
 	    userlevel.addActionListener(this);
 	    add(userlevel);
 	    
 	    
-	    loginBtn = new JButton("LOGIN");
-	    loginBtn.setBounds(250,195,95,35);
+	    loginBtn = new JButton("LOGOWANIE");
+	    loginBtn.setBounds(250,230,200,30);
 	    loginBtn.addActionListener(this);
 	    add(loginBtn);
 	    
 	    
-	    createBtn = new JButton("REGISTER");
-	    createBtn.setBounds(355,195,95,35);
+	    createBtn = new JButton("REJESTRACJA");
+	    createBtn.setBounds(20,230,200,30);
 	    createBtn.addActionListener(this);
 	    add(createBtn);
 	}
@@ -123,7 +126,7 @@ public class LoginFrame extends JFrame implements ActionListener {
 				}
 			}
 			else {
-				JOptionPane.showMessageDialog(this,"Complet all fields and choose user level!","ERROR",JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(this,"Wypełnij wszystkie pola i wybierz odpowiedni poziom uprawnień!","BŁĄD",JOptionPane.ERROR_MESSAGE);
 			}
 		}
 		else if(source == createBtn) {
