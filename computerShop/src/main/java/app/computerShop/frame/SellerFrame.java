@@ -12,9 +12,4 @@ public class SellerFrame extends UserFrame {
 		// TODO Auto-generated constructor stub
 	}
 
-	@Override
-	public void actionPerformed(ActionEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
 }

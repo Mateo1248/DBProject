@@ -9,28 +9,31 @@ import java.sql.SQLException;
 
 import javax.swing.JFrame;
 
-public abstract class UserFrame extends JFrame implements ActionListener {
+public abstract class UserFrame extends JFrame {
 
 	private Connection connection;
+	String title;
 	
 	UserFrame(String title, Connection connection) {
 		super(title);
+		this.title=title;
 		this.connection = connection;
 		setResizable(false);
 		setBounds(700,300,1000,600);
-		setLayout(null);
 		getContentPane().setBackground(Color.LIGHT_GRAY);
 		
-		this.addWindowListener(new WindowAdapter()
-        {
-            @Override
-            public void windowClosing(WindowEvent e)
-            {
-                try { connection.close(); System.out.println( title + " connection closed"); } 
-                catch (SQLException e1) { e1.printStackTrace(); }
-            }
-        });
+		this.addWindowListener(new MyWindowAdapter());
 		setVisible(true);
+	}
+
+	public class MyWindowAdapter extends WindowAdapter
+	{
+		@Override
+		public void windowClosing(WindowEvent e)
+		{
+			try { connection.close(); System.out.println( title + " connection closed"); }
+			catch (SQLException e1) { e1.printStackTrace(); }
+		}
 	}
 
 }
