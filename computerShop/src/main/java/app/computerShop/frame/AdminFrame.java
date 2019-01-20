@@ -1,16 +1,20 @@
 package app.computerShop.frame;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 
 public class AdminFrame extends UserFrame {
 
 	JPanel mainPanel;
-	JButton orders,products, users;
+	JButton orders,products, users, backupexport, backupimport;
 	private Connection connection;
 
 	AdminFrame(Connection connection) {
@@ -31,9 +35,15 @@ public class AdminFrame extends UserFrame {
 		users.addActionListener(new WorkersButtonListener());
 		products = new JButton("Products");
 		products.addActionListener(new ProductsButtonListener());
+		backupexport = new JButton("Eksport DB");
+		backupexport.addActionListener(new ExportBackupButtonListener());
+		backupimport = new JButton("Import DB");
+		backupimport.addActionListener(new ImportBackupButtonListener());
 		buttonsPanel.add(orders);
 		buttonsPanel.add(products);
 		buttonsPanel.add(users);
+		buttonsPanel.add(backupexport);
+		buttonsPanel.add(backupimport);
 
 		mainPanel.add(buttonsPanel);
 		this.getContentPane().add(BorderLayout.CENTER,mainPanel);
@@ -78,7 +88,35 @@ public class AdminFrame extends UserFrame {
 		@Override
 		public void actionPerformed(ActionEvent e)
 		{
-			
+			 JFileChooser filechooser = new JFileChooser();
+			 filechooser.setDialogTitle("Wpisz lub wybierz plik do ktorego eksportowac.");
+			 filechooser.addChoosableFileFilter(new FileFilter() {
+				    public String getDescription() {
+				        return "MySql backups (*.sql)";
+				    }
+				    public boolean accept(File f) {
+				        if (f.isDirectory()) {
+				            return true;
+				        } else {
+				            return f.getName().toLowerCase().endsWith(".sql");
+				        }
+				    }
+			});
+			 filechooser.setAcceptAllFileFilterUsed(false);
+		    int result = filechooser.showOpenDialog(null);
+		 
+		    if (result == JFileChooser.APPROVE_OPTION) {
+			    File file = filechooser.getSelectedFile();
+			    String filepath;
+			    if(!file.getName().toLowerCase().endsWith(".sql"))
+			    	filepath = file.getAbsolutePath() + ".sql";
+			    else
+			    	filepath = file.getAbsolutePath();
+			    if(exportDB(filepath))
+			    	System.out.println("export finished");
+			    else
+			    	System.out.println("export error");
+		    }
 		}
 	}
 	
@@ -88,7 +126,75 @@ public class AdminFrame extends UserFrame {
 		@Override
 		public void actionPerformed(ActionEvent e)
 		{
-			
+			JFileChooser filechooser = new JFileChooser();
+			 filechooser.setDialogTitle("Wpisz lub wybierz ktory eksportowac.");
+			 filechooser.addChoosableFileFilter(new FileFilter() {
+				    public String getDescription() {
+				        return "MySql backups (*.sql)";
+				    }
+				    public boolean accept(File f) {
+				        if (f.isDirectory()) {
+				            return true;
+				        } else {
+				            return f.getName().toLowerCase().endsWith(".sql");
+				        }
+				    }
+			});
+			filechooser.setAcceptAllFileFilterUsed(false);
+			int result = filechooser.showOpenDialog(null);
+			 
+			if (result == JFileChooser.APPROVE_OPTION) {
+			    File file = filechooser.getSelectedFile();
+			    String filepath = file.getAbsolutePath();
+				if(importDB(filepath))
+				   	System.out.println("import finished");
+				else
+				   	System.out.println("import error");
+			}
 		}
+	}
+	
+	
+	 private boolean exportDB(String goalpath) {
+		 	String mysqldumpdir = System.getProperty("user.dir") + "/dumptool/mysqldump.exe";
+		 	String executeCmd=mysqldumpdir + " -uadmin -padmin -B computershop -r " + goalpath;
+		 	Process runtimeProcess;
+		    try {
+		        runtimeProcess = Runtime.getRuntime().exec(executeCmd);
+		        int processComplete = runtimeProcess.waitFor();
+
+		        if (processComplete == 0) {
+		            return true;
+		        } 
+		        else {
+		        	return false;		        
+		        }
+		    } catch (Exception ex) {
+		        ex.printStackTrace();
+		    }
+
+		    return false;
+	}
+	 
+	 
+	 private boolean importDB(String frompath) {
+		 	String mysqldumpdir = System.getProperty("user.dir") + "/dumptool/mysql.exe";
+		    String []executeCmd= {mysqldumpdir, "--user=admin", "--password=admin", "-e", "source "+ frompath};
+		    Process runtimeProcess;
+		    try {
+		        runtimeProcess = Runtime.getRuntime().exec(executeCmd);
+		        int processComplete = runtimeProcess.waitFor();
+
+		        if (processComplete == 0) {
+		            return true;
+		        } 
+		        else {
+		        	return false;		        
+		        }
+		    } 
+		    catch (Exception ex) {
+		    	ex.printStackTrace();
+		    }
+		    return false;
 	}
 }
