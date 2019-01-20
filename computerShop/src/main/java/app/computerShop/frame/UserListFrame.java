@@ -1,12 +1,10 @@
 package app.computerShop.frame;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
-import java.util.Vector;
 
 public class UserListFrame {
 
@@ -15,7 +13,7 @@ public class UserListFrame {
     JScrollPane scrollPane;
     JFrame frame;
     JPanel mainPanel,buttonsPanel,tablePanel;
-    JButton button1, button2, button3;
+    JButton addButton, deleteButton, showButton;
     private ResultSet myRs = null;
     private Statement myStmt = null;
 
@@ -33,13 +31,14 @@ public class UserListFrame {
         buttonsPanel = new JPanel();
         tablePanel = new JPanel();
 
-        button1 = new JButton("Dodaj");
-        button2 = new JButton("Usuń");
-        button3 = new JButton("Pokaż");
-        buttonsPanel.add(button1);
-        buttonsPanel.add(button2);
-        buttonsPanel.add(button3);
-        button3.addActionListener(new Button3Listener());
+        addButton = new JButton("Dodaj");
+        deleteButton = new JButton("Usuń");
+        showButton = new JButton("Pokaż");
+        buttonsPanel.add(addButton);
+        buttonsPanel.add(deleteButton);
+        buttonsPanel.add(showButton);
+        showButton.addActionListener(new showButtonListener());
+        addButton.addActionListener(new addButtonListener());
 
         getData();
         scrollPane = new JScrollPane(table);
@@ -52,13 +51,23 @@ public class UserListFrame {
         frame.setVisible(true);
     }
 
-    class Button3Listener implements ActionListener
+    class showButtonListener implements ActionListener
     {
         @Override
         public void actionPerformed(ActionEvent e)
         {
             getData();
             frame.repaint();
+        }
+    }
+
+    class addButtonListener implements ActionListener
+    {
+        @Override
+        public void actionPerformed(ActionEvent e)
+        {
+            AddSellerFrame asf = new AddSellerFrame(connection);
+            asf.start();
         }
     }
 
@@ -70,7 +79,6 @@ public class UserListFrame {
             String sql = "SELECT * FROM users";
             myRs = myStmt.executeQuery(sql);
             table = new JTable(TableModel.buildTableModel(myRs));
-            System.out.println("got it");
         }catch(SQLException ex)
         {
             ex.printStackTrace();

@@ -25,11 +25,11 @@ public class AdminFrame extends UserFrame {
 		mainPanel.add(clientNamePanel);
 
 		JPanel buttonsPanel = new JPanel();
-		orders = new JButton("Orders");
+		orders = new JButton("Zamówienia");
 		orders.addActionListener(new OrdersButtonListener());
-		users = new JButton("Users");
+		users = new JButton("Użytkownicy");
 		users.addActionListener(new WorkersButtonListener());
-		products = new JButton("Products");
+		products = new JButton("Produkty");
 		products.addActionListener(new ProductsButtonListener());
 		buttonsPanel.add(orders);
 		buttonsPanel.add(products);
