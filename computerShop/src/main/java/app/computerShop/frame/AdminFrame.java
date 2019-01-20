@@ -4,14 +4,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
 import java.sql.Connection;
 
 
 public class AdminFrame extends UserFrame {
 
 	JPanel mainPanel;
-	JButton orders,products,workers;
+	JButton orders,products, users;
 	private Connection connection;
 
 	AdminFrame(Connection connection) {
@@ -28,13 +27,13 @@ public class AdminFrame extends UserFrame {
 		JPanel buttonsPanel = new JPanel();
 		orders = new JButton("Orders");
 		orders.addActionListener(new OrdersButtonListener());
-		workers= new JButton("Workers");
-		workers.addActionListener(new WorkersButtonListener());
+		users = new JButton("Users");
+		users.addActionListener(new WorkersButtonListener());
 		products = new JButton("Products");
 		products.addActionListener(new ProductsButtonListener());
 		buttonsPanel.add(orders);
 		buttonsPanel.add(products);
-		buttonsPanel.add(workers);
+		buttonsPanel.add(users);
 
 		mainPanel.add(buttonsPanel);
 		this.getContentPane().add(BorderLayout.CENTER,mainPanel);
@@ -62,7 +61,7 @@ public class AdminFrame extends UserFrame {
 		@Override
 		public void actionPerformed(ActionEvent e)
 		{
-			System.out.println("Go to Workers");
+			System.out.println("Go to Users");
 			UserListFrame usrlf= new UserListFrame(connection);
 			usrlf.start();
 			System.out.println("Go to orders");

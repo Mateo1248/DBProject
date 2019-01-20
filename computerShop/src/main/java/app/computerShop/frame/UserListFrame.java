@@ -70,7 +70,6 @@ public class UserListFrame {
             String sql = "SELECT * FROM users";
             myRs = myStmt.executeQuery(sql);
             table = new JTable(TableModel.buildTableModel(myRs));
-            scrollPane = new JScrollPane(table);
             System.out.println("got it");
         }catch(SQLException ex)
         {
