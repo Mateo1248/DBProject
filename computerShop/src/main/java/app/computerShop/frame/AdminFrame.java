@@ -25,11 +25,11 @@ public class AdminFrame extends UserFrame {
 		mainPanel.add(clientNamePanel);
 
 		JPanel buttonsPanel = new JPanel();
-		orders = new JButton("Zamówienia");
+		orders = new JButton("Orders");
 		orders.addActionListener(new OrdersButtonListener());
-		users = new JButton("Użytkownicy");
+		users = new JButton("Users");
 		users.addActionListener(new WorkersButtonListener());
-		products = new JButton("Produkty");
+		products = new JButton("Products");
 		products.addActionListener(new ProductsButtonListener());
 		buttonsPanel.add(orders);
 		buttonsPanel.add(products);
@@ -39,6 +39,7 @@ public class AdminFrame extends UserFrame {
 		this.getContentPane().add(BorderLayout.CENTER,mainPanel);
 	}
 
+	
 	class OrdersButtonListener implements ActionListener
 	{
 		@Override
@@ -48,6 +49,7 @@ public class AdminFrame extends UserFrame {
 		}
 	}
 
+	
 	class ProductsButtonListener implements ActionListener
 	{
 		@Override
@@ -56,6 +58,8 @@ public class AdminFrame extends UserFrame {
 			System.out.println("Go to Products");
 		}
 	}
+	
+	
 	class WorkersButtonListener implements ActionListener
 	{
 		@Override
@@ -68,5 +72,23 @@ public class AdminFrame extends UserFrame {
 		}
 	}
 
-
+	
+	class ExportBackupButtonListener implements ActionListener
+	{
+		@Override
+		public void actionPerformed(ActionEvent e)
+		{
+			
+		}
+	}
+	
+	
+	class ImportBackupButtonListener implements ActionListener
+	{
+		@Override
+		public void actionPerformed(ActionEvent e)
+		{
+			
+		}
+	}
 }

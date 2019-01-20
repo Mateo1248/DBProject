@@ -83,15 +83,16 @@ public class AddSellerFrame {
         public void actionPerformed(ActionEvent e)
         {
             System.out.println("Tu bedzie dodawanie tylko coś z procedura problem");
-            /*
+            
             try
             {
+            	Double salary = Double.parseDouble(getSalary.getText());
                 String sql = "CALL addSeller('"+getFirstName.getText()+"','"+getLastName.getText()+
-                        "','"+getSalary.getText()+"','"+getLogin.getText()+"','"+getPassword.getText()+"')";
+                        "',"+salary+",'"+getLogin.getText()+"','"+getPassword.getText()+"')";
                 System.out.println(sql);
 
-                //CallableStatement cStmt = conn.prepareCall("{call addSeller(?, ?, ?, ?, ?)}");
-               // myStmt.execute(sql);
+                myStmt = connection.createStatement();
+                myStmt.execute(sql);
                 System.out.println("dodano");
 
 
@@ -99,7 +100,7 @@ public class AddSellerFrame {
             {
                 ex.printStackTrace();
             }
-            */
+            
         }
     }
 }
