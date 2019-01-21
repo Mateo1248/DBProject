@@ -21,7 +21,6 @@ public class AddSellerFrame {
     public AddSellerFrame(Connection connection)
     {
         this.connection=connection;
-        start();
     }
 
     public void start()
@@ -83,7 +82,6 @@ public class AddSellerFrame {
         public void actionPerformed(ActionEvent e)
         {
             System.out.println("Tu bedzie dodawanie tylko coś z procedura problem");
-            
             try
             {
             	Double salary = Double.parseDouble(getSalary.getText());
@@ -100,7 +98,7 @@ public class AddSellerFrame {
             {
                 ex.printStackTrace();
             }
-            
+
         }
     }
 }

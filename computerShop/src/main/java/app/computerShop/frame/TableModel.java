@@ -8,8 +8,9 @@ import java.util.Vector;
 
 public class TableModel {
 
-    public static DefaultTableModel buildTableModel(ResultSet rs)
-            throws SQLException
+    private DefaultTableModel defaultTableModel;
+
+    public TableModel(ResultSet rs) throws SQLException
     {
         ResultSetMetaData metaData = rs.getMetaData();
 
@@ -29,7 +30,13 @@ public class TableModel {
             }
             data.add(vector);
         }
-        
-        return new DefaultTableModel(data, columnNames);
+
+        defaultTableModel =new DefaultTableModel(data, columnNames);
     }
+    public DefaultTableModel getModel()
+    {
+        defaultTableModel.fireTableDataChanged();
+        return defaultTableModel;
+    }
+
 }

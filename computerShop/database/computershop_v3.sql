@@ -252,7 +252,8 @@ BEGIN
     "client"
     );
     
-	SELECT Id FROM users WHERE Password LIKE password AND Login LIKE login LIMIT 1 INTO userid;
+	/*SELECT Id FROM users WHERE Password LIKE password AND Login LIKE login LIMIT 1 INTO userid;*/
+  SELECT LAST_INSERT_ID() into userid;
     
 	INSERT INTO sellers(Id, FirstName, LastName, Email, TelNumber, Address)
     VALUES( 
@@ -289,8 +290,8 @@ BEGIN
     password, 
     "seller"
     );
-    
-	SELECT Id FROM users WHERE Password LIKE password AND Login LIKE login LIMIT 1 INTO userid;
+
+  SELECT LAST_INSERT_ID() into userid;
     
 	INSERT INTO sellers(Id, FirstName, LastName, Salary)
     VALUES( 
