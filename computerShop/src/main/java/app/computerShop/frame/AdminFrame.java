@@ -112,6 +112,7 @@ public class AdminFrame extends UserFrame {
 			    	filepath = file.getAbsolutePath() + ".sql";
 			    else
 			    	filepath = file.getAbsolutePath();
+			    filepath = filepath.replace('\\', '/');
 			    if(exportDB(filepath))
 			    	System.out.println("export finished");
 			    else
@@ -127,7 +128,7 @@ public class AdminFrame extends UserFrame {
 		public void actionPerformed(ActionEvent e)
 		{
 			JFileChooser filechooser = new JFileChooser();
-			 filechooser.setDialogTitle("Wpisz lub wybierz ktory eksportowac.");
+			 filechooser.setDialogTitle("Wpisz lub wybierz plik ktory eksportowac.");
 			 filechooser.addChoosableFileFilter(new FileFilter() {
 				    public String getDescription() {
 				        return "MySql backups (*.sql)";
@@ -156,7 +157,8 @@ public class AdminFrame extends UserFrame {
 	
 	
 	 private boolean exportDB(String goalpath) {
-		 	String mysqldumpdir = System.getProperty("user.dir") + "/dumptool/mysqldump.exe";
+		 	String mysqldumpdir = System.getProperty("user.dir") + "\\dumptool\\mysqldump.exe";
+		 	mysqldumpdir = mysqldumpdir.replace('\\', '/');
 		 	String executeCmd=mysqldumpdir + " -uadmin -padmin -B computershop -r " + goalpath;
 		 	Process runtimeProcess;
 		    try {
@@ -172,13 +174,13 @@ public class AdminFrame extends UserFrame {
 		    } catch (Exception ex) {
 		        ex.printStackTrace();
 		    }
-
 		    return false;
 	}
 	 
 	 
 	 private boolean importDB(String frompath) {
-		 	String mysqldumpdir = System.getProperty("user.dir") + "/dumptool/mysql.exe";
+		 	String mysqldumpdir = System.getProperty("user.dir") + "\\dumptool\\mysql.exe";
+		 	mysqldumpdir = mysqldumpdir.replace('\\', '/');
 		    String []executeCmd= {mysqldumpdir, "--user=admin", "--password=admin", "-e", "source "+ frompath};
 		    Process runtimeProcess;
 		    try {
