@@ -20,7 +20,7 @@ import javax.swing.JTextArea;
 public class CreateClientFrame extends JFrame implements ActionListener{
 
 	private JButton create;
-	private JTextArea firstnameT, lastnameT, emailT, telnrT, adressT, passwordT, loginT; 
+	private JTextArea firstnameT, lastnameT, emailT, telnrT, postcodeT, cityT, passwordT, loginT; 
 	private Connection connection;
 	
 	CreateClientFrame(Connection con) {
@@ -86,13 +86,22 @@ public class CreateClientFrame extends JFrame implements ActionListener{
 		add(telnrT);
 		
 		//
-		JLabel adressL = new JLabel("Adres wysyłki: ");
-		adressL.setBounds(20,370,110,30);
-		add(adressL);
+		JLabel postcodeL = new JLabel("Kod pocztowy: ");
+		postcodeL.setBounds(20,370,110,30);
+		add(postcodeL);
 		
-		adressT = new JTextArea();
-		adressT.setBounds(130,370,150,30);
-		add(adressT);
+		postcodeT = new JTextArea();
+		postcodeT.setBounds(130,370,150,30);
+		add(postcodeT);
+		
+		//
+		JLabel cityL = new JLabel("Miasto: ");
+		cityL.setBounds(20,370,110,30);
+		add(cityL);
+		
+		cityT = new JTextArea();
+		cityT.setBounds(130,370,150,30);
+		add(cityT);
 		
 		//
 		JLabel info = new JLabel("Obowiązkowo wypełnij wszystkie pola!");
@@ -113,14 +122,18 @@ public class CreateClientFrame extends JFrame implements ActionListener{
 		Object source = ae.getSource();
 		
 		if(source == create) {
-			if(!firstnameT.getText().equals("") && !lastnameT.getText().equals("") && !emailT.getText().equals("") && !telnrT.getText().equals("") && !adressT.getText().equals("") && !passwordT.getText().equals("") && !loginT.getText().equals("")) {
-				try {
-					Statement stmt =	connection.createStatement();
-					int tel = Integer.parseInt(telnrT.getText());
-					String addclient = "CALL addClient('"+firstnameT.getText()+"','"+lastnameT.getText()+"','"+emailT.getText()+"',"+tel+",'"+adressT.getText()+"','"+loginT.getText()+"','"+passwordT.getText()+"')";
-					stmt.execute(addclient);
-				} catch (SQLException e) {
-					e.printStackTrace();
+			if(!firstnameT.getText().equals("") && !lastnameT.getText().equals("") && !emailT.getText().equals("") && !telnrT.getText().equals("") && !cityT.getText().equals("") && !postcodeT.getText().equals("") && !passwordT.getText().equals("") && !loginT.getText().equals("")) {
+				if(telnrT.getText().length()==9) {
+					try {
+						Statement stmt =	connection.createStatement();
+						String addclient = "CALL addClient('"+firstnameT.getText()+"','"+lastnameT.getText()+"','"+emailT.getText()+"','"+telnrT.getText()+"','"+postcodeT.getText()+"','"+cityT.getText()+"','"+loginT.getText()+"','"+passwordT.getText()+"')";
+						stmt.execute(addclient);
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				}
+				else {
+					JOptionPane.showMessageDialog(this,"Number telefonu powinien zawierac 9 cyfr!","BŁĄD",JOptionPane.ERROR_MESSAGE);
 				}
 			}
 			else {
