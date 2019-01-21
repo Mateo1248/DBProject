@@ -139,10 +139,15 @@ public class LoginFrame extends JFrame implements ActionListener {
 			}
 		}
 		else if(source == createBtn) {
-			CreateClientFrame ccf = new CreateClientFrame();
-			ccf.setVisible(true);
+			CreateClientFrame ccf;
+			try {
+				ccf = new CreateClientFrame(getConnection("admin","admin","computershop"));
+				ccf.setVisible(true);
+			} catch (ClassNotFoundException | SQLException e) {
+				e.printStackTrace();
+			}
 		}
-
+		
 	}
 	
 	

@@ -3,6 +3,11 @@ package app.computerShop.frame;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -11,13 +16,16 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 
+
 public class CreateClientFrame extends JFrame implements ActionListener{
 
-	JButton create;
-	JTextArea firstnameT, lastnameT, emailT, telnrT, adressT, passwordT, loginT; 
+	private JButton create;
+	private JTextArea firstnameT, lastnameT, emailT, telnrT, adressT, passwordT, loginT; 
+	private Connection connection;
 	
-	CreateClientFrame() {
+	CreateClientFrame(Connection con) {
 		super("REJESTRACJA KLIENTA");
+		this.connection = con;
 		setResizable(false);
 		setBounds(700,300,500,460);
 		setLayout(null);
@@ -100,17 +108,35 @@ public class CreateClientFrame extends JFrame implements ActionListener{
 	}
 	
 	
-	@Override
+	@Override	
 	public void actionPerformed(ActionEvent ae) {
 		Object source = ae.getSource();
 		
 		if(source == create) {
-			if(!firstnameT.getText().equals("") && !lastnameT.getText().equals("") && !emailT.getText().equals("") && !adressT.getText().equals("") && !passwordT.getText().equals("") && !loginT.getText().equals("")) {
-				//stworz nowego klienta
+			if(!firstnameT.getText().equals("") && !lastnameT.getText().equals("") && !emailT.getText().equals("") && !telnrT.getText().equals("") && !adressT.getText().equals("") && !passwordT.getText().equals("") && !loginT.getText().equals("")) {
+				try {
+					Statement stmt =	connection.createStatement();
+					int tel = Integer.parseInt(telnrT.getText());
+					String addclient = "CALL addClient('"+firstnameT.getText()+"','"+lastnameT.getText()+"','"+emailT.getText()+"',"+tel+",'"+adressT.getText()+"','"+loginT.getText()+"','"+passwordT.getText()+"')";
+					stmt.execute(addclient);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
 			}
 			else {
 				JOptionPane.showMessageDialog(this,"Wypełnij wszystkie pola!","BŁĄD",JOptionPane.ERROR_MESSAGE);
 			}
+		}
+	}
+	
+	
+	public class MyWindowAdapter extends WindowAdapter
+	{
+		@Override
+		public void windowClosing(WindowEvent e)
+		{
+			try { connection.close(); System.out.println("registration exit"); }
+			catch (SQLException e1) { e1.printStackTrace(); }
 		}
 	}
 }
