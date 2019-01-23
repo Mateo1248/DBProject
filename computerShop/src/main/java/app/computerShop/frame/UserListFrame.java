@@ -16,7 +16,7 @@ public class UserListFrame {
     JScrollPane scrollPane;
     JFrame frame;
     TableModel tm;
-    JPanel mainPanel,buttonsPanel,tablePanel;
+    JPanel mainPanel,tablePanel;
     JButton addButton, deleteButton, showButton;
     JTextField loginTF,passwordTF,levelTF;
     private ResultSet myRs = null;
@@ -33,33 +33,49 @@ public class UserListFrame {
         frame.setResizable(false);
         frame.setBounds(700,300,1000,600);
         mainPanel = new JPanel();
-        buttonsPanel = new JPanel();
         tablePanel = new JPanel();
+        JPanel deladdPanel = new JPanel(new GridBagLayout());
+        JPanel searchPanel = new JPanel(new GridBagLayout());
+        JPanel tfandlabelPanel = new JPanel(new GridLayout(2,0));
+
+        JLabel loginL = new JLabel("login");
+        JLabel passL = new JLabel("hasło");
+        JLabel levelL = new JLabel("typ");
+        JPanel searchLabelsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT,90,0));
+        searchLabelsPanel.add(loginL);
+        searchLabelsPanel.add(passL);
+        searchLabelsPanel.add(levelL);
 
         addButton = new JButton("Dodaj");
         deleteButton = new JButton("Usuń");
         showButton = new JButton("Pokaż");
-        buttonsPanel.add(addButton);
-        buttonsPanel.add(deleteButton);
-        buttonsPanel.add(showButton);
         showButton.addActionListener(new getListener());
         addButton.addActionListener(new addButtonListener());
         deleteButton.addActionListener(new DeleteButtonListener());
 
-        loginTF=new JTextField(20);
-        passwordTF=new JTextField(20);
-        levelTF=new JTextField(20);
+
+        deladdPanel.add(addButton);
+        deladdPanel.add(deleteButton);
+
+        loginTF=new JTextField(15);
+        passwordTF=new JTextField(15);
+        levelTF=new JTextField(15);
+        searchPanel.add(loginTF);
+        searchPanel.add(passwordTF);
+        searchPanel.add(levelTF);
+        searchPanel.add(showButton);
+
+        tfandlabelPanel.add(searchLabelsPanel);
+        tfandlabelPanel.add(searchPanel);
 
         getData("SELECT * FROM users");
         table = new JTable(tableModel);
         scrollPane = new JScrollPane(table);
         tablePanel.add(scrollPane);
 
-        mainPanel.add(loginTF);
-        mainPanel.add(passwordTF);
-        mainPanel.add(levelTF);
-        mainPanel.add(buttonsPanel);
-        mainPanel.add(tablePanel);
+        mainPanel.add(BorderLayout.NORTH,deladdPanel);
+        mainPanel.add(BorderLayout.SOUTH,tfandlabelPanel);
+        mainPanel.add(BorderLayout.CENTER,tablePanel);
 
         frame.getContentPane().add(BorderLayout.CENTER,mainPanel);
         frame.setVisible(true);
@@ -86,7 +102,9 @@ public class UserListFrame {
         {
             try
             {
-                myStmt.execute("DELETE FROM users where login='sfs';");
+                System.out.println("Usunięto wiersz");
+                myStmt.execute("DELETE FROM users where id_user = "
+                        + tableModel.getValueAt(table.getSelectedRow(),0)+" ;");
                 tableModel.fireTableDataChanged();
             }catch(SQLException ex)
             {

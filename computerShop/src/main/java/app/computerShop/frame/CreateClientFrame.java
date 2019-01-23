@@ -20,14 +20,14 @@ import javax.swing.JTextArea;
 public class CreateClientFrame extends JFrame implements ActionListener{
 
 	private JButton create;
-	private JTextArea firstnameT, lastnameT, emailT, telnrT, postcodeT, cityT, passwordT, loginT; 
+	private JTextArea firstnameT, lastnameT, emailT, telnrT, postcodeT, cityT, passwordT, loginT,addressT;
 	private Connection connection;
 	
 	CreateClientFrame(Connection con) {
 		super("REJESTRACJA KLIENTA");
 		this.connection = con;
 		setResizable(false);
-		setBounds(700,300,500,460);
+		setBounds(700,300,500,600);
 		setLayout(null);
 		getContentPane().setBackground(Color.LIGHT_GRAY);
 	
@@ -96,12 +96,21 @@ public class CreateClientFrame extends JFrame implements ActionListener{
 		
 		//
 		JLabel cityL = new JLabel("Miasto: ");
-		cityL.setBounds(20,370,110,30);
+		cityL.setBounds(20,420,110,30);
 		add(cityL);
 		
 		cityT = new JTextArea();
-		cityT.setBounds(130,370,150,30);
+		cityT.setBounds(130,420,150,30);
 		add(cityT);
+
+		//
+		JLabel addressL = new JLabel("Adres: ");
+		addressL.setBounds(20,470,110,30);
+		add(addressL);
+
+		addressT = new JTextArea();
+		addressT.setBounds(130,470,150,30);
+		add(addressT);
 		
 		//
 		JLabel info = new JLabel("Obowiązkowo wypełnij wszystkie pola!");
@@ -126,7 +135,7 @@ public class CreateClientFrame extends JFrame implements ActionListener{
 				if(telnrT.getText().length()==9) {
 					try {
 						Statement stmt =	connection.createStatement();
-						String addclient = "CALL addClient('"+firstnameT.getText()+"','"+lastnameT.getText()+"','"+emailT.getText()+"','"+telnrT.getText()+"','"+postcodeT.getText()+"','"+cityT.getText()+"','"+loginT.getText()+"','"+passwordT.getText()+"')";
+						String addclient = "CALL addClient('"+firstnameT.getText()+"','"+lastnameT.getText()+"','"+emailT.getText()+"','"+telnrT.getText()+"','"+postcodeT.getText()+"','"+cityT.getText()+"','"+loginT.getText()+"','"+passwordT.getText()+"','"+addressT.getText()+"')";
 						stmt.execute(addclient);
 					} catch (SQLException e) {
 						e.printStackTrace();
