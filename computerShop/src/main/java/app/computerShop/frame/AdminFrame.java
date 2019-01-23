@@ -66,6 +66,8 @@ public class AdminFrame extends UserFrame {
 		public void actionPerformed(ActionEvent e)
 		{
 			System.out.println("Go to Products");
+            ProductListFrame prodlf= new ProductListFrame(connection);
+            prodlf.start();
 		}
 	}
 	

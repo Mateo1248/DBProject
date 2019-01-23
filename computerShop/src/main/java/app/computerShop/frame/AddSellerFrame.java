@@ -96,7 +96,15 @@ public class AddSellerFrame {
 
             }catch(SQLException ex)
             {
-                ex.printStackTrace();
+                System.out.println(ex.getMessage());
+                if(ex.getMessage().equals("badlogin"))
+                {
+                    JOptionPane.showMessageDialog(frame,"Login zajęty","BŁĄD",JOptionPane.ERROR_MESSAGE);
+                }
+                else
+                {
+                    ex.printStackTrace();
+                }
             }
 
         }

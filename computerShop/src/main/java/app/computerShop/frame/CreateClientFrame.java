@@ -135,10 +135,18 @@ public class CreateClientFrame extends JFrame implements ActionListener{
 				if(telnrT.getText().length()==9) {
 					try {
 						Statement stmt =	connection.createStatement();
-						String addclient = "CALL addClient('"+firstnameT.getText()+"','"+lastnameT.getText()+"','"+emailT.getText()+"','"+telnrT.getText()+"','"+postcodeT.getText()+"','"+cityT.getText()+"','"+loginT.getText()+"','"+passwordT.getText()+"','"+addressT.getText()+"')";
+						String addclient = "CALL addClient('"+firstnameT.getText()+"','"+lastnameT.getText()+"','"+emailT.getText()+"','"+telnrT.getText()+"','"+postcodeT.getText()+"','"+cityT.getText()+"','"+addressT.getText()+"','"+loginT.getText()+"','"+passwordT.getText()+"')";
 						stmt.execute(addclient);
 					} catch (SQLException e) {
-						e.printStackTrace();
+                        System.out.println(e.getMessage());
+                        if(e.getMessage().equals("badlogin"))
+                        {
+                            JOptionPane.showMessageDialog(this,"Login zajęty","BŁĄD",JOptionPane.ERROR_MESSAGE);
+                        }
+                        else
+                        {
+                            e.printStackTrace();
+                        }
 					}
 				}
 				else {
