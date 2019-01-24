@@ -138,11 +138,16 @@ public class CreateClientFrame extends JFrame implements ActionListener{
 						String addclient = "CALL addClient('"+firstnameT.getText()+"','"+lastnameT.getText()+"','"+emailT.getText()+"','"+telnrT.getText()+"','"+postcodeT.getText()+"','"+cityT.getText()+"','"+addressT.getText()+"','"+loginT.getText()+"','"+passwordT.getText()+"')";
 						stmt.execute(addclient);
 					} catch (SQLException e) {
+						/* NIE WIEM JAK TA OBSŁUGA BEDZIE GRAC Z PROCEDURA JAK TAM SIE WSTAWI SIGNAL ERRORY I BEDZIE GIT */
                         System.out.println(e.getMessage());
                         if(e.getMessage().equals("badlogin"))
                         {
                             JOptionPane.showMessageDialog(this,"Login zajęty","BŁĄD",JOptionPane.ERROR_MESSAGE);
                         }
+                        else if(e.getMessage().equals("bademail"))
+						{
+							JOptionPane.showMessageDialog(this,"Adres email zajęty","BŁĄD",JOptionPane.ERROR_MESSAGE);
+						}
                         else
                         {
                             e.printStackTrace();

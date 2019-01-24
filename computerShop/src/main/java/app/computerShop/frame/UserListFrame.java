@@ -68,7 +68,7 @@ public class UserListFrame {
         tfandlabelPanel.add(searchLabelsPanel);
         tfandlabelPanel.add(searchPanel);
 
-
+        getData("Select * FROM users");
         table = new JTable(tableModel);
         scrollPane = new JScrollPane(table);
         tablePanel.add(scrollPane);

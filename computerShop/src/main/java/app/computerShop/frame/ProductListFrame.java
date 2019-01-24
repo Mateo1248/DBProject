@@ -36,7 +36,9 @@ public class ProductListFrame {
         getData("SELECT * FROM computers");
         table = new JTable(tableModel);
         scrollPane = new JScrollPane(table);
+        TableModel.setVisibleRowCount(table,10);
         tablePanel.add(scrollPane);
+
 
         mainPanel.add(tablePanel);
 

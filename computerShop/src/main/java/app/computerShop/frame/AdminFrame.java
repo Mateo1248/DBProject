@@ -14,8 +14,10 @@ import java.sql.Statement;
 public class AdminFrame extends UserFrame {
 
 	JPanel mainPanel;
-	JButton orders,products, users, backupexport, backupimport;
+	JButton products, users, backupexport, backupimport;
 	private Connection connection;
+
+	JButton test;
 
 	AdminFrame(Connection connection) {
 		super("ADMINISTRATOR", connection);
@@ -29,8 +31,6 @@ public class AdminFrame extends UserFrame {
 		mainPanel.add(clientNamePanel);
 
 		JPanel buttonsPanel = new JPanel();
-		orders = new JButton("Orders");
-		orders.addActionListener(new OrdersButtonListener());
 		users = new JButton("Users");
 		users.addActionListener(new WorkersButtonListener());
 		products = new JButton("Products");
@@ -39,27 +39,30 @@ public class AdminFrame extends UserFrame {
 		backupexport.addActionListener(new ExportBackupButtonListener());
 		backupimport = new JButton("Import DB");
 		backupimport.addActionListener(new ImportBackupButtonListener());
-		buttonsPanel.add(orders);
 		buttonsPanel.add(products);
 		buttonsPanel.add(users);
 		buttonsPanel.add(backupexport);
 		buttonsPanel.add(backupimport);
 
+		test = new JButton("test");
+		test.addActionListener(new Testb());
+		buttonsPanel.add(test);
+
 		mainPanel.add(buttonsPanel);
 		this.getContentPane().add(BorderLayout.CENTER,mainPanel);
 	}
 
-	
-	class OrdersButtonListener implements ActionListener
-	{
-		@Override
-		public void actionPerformed(ActionEvent e)
-		{
-			System.out.println("go to orders");
-		}
-	}
+    class Testb implements ActionListener
+    {
+        @Override
+        public void actionPerformed(ActionEvent e)
+        {
+            System.out.println("Go to Products");
+            MakeOrderFrame m= new MakeOrderFrame(connection);
+            m.start();
+        }
+    }
 
-	
 	class ProductsButtonListener implements ActionListener
 	{
 		@Override

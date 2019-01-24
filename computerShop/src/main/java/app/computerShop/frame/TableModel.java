@@ -1,6 +1,9 @@
 package app.computerShop.frame;
 
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
+import java.awt.*;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -38,5 +41,30 @@ public class TableModel {
         defaultTableModel.fireTableDataChanged();
         return defaultTableModel;
     }
+
+    public static void setVisibleRowCount(JTable table, int rows){
+        int height = 0;
+        for(int row=0; row<rows; row++)
+            height += table.getRowHeight(row);
+
+        table.setPreferredScrollableViewportSize(new Dimension(
+                table.getPreferredScrollableViewportSize().width,
+                height
+        ));
+    }
+
+    public static void setColumnWidths(JTable table, int... widths)
+    {
+        TableColumnModel columnModel = table.getColumnModel();
+        for (int i = 0; i < widths.length; i++)
+        {
+            if (i < columnModel.getColumnCount())
+            {
+                columnModel.getColumn(i).setMaxWidth(widths[i]);
+            }
+            else break;
+        }
+    }
+
 
 }
