@@ -3,6 +3,7 @@ package app.computerShop.frame;
 I INSERTUJESZ ORDER(TRZEBA JAKOS TU ID CLIENTA PRZEKAZAC)
 POD PLUSEM MASZ DODAWANIE PRODUKTOW(NA RAZIE DODAJE TYLKO TEN PIERWSZY KOMP ALE ULEPSZE))
 
+TU TRZEBA OGARNAC TEGO KLIENTA JUZ TYLKO
  */
 
 import javax.swing.*;
@@ -27,7 +28,7 @@ public class MakeOrderFrame {
     JPanel mainPanel, productTablePanel,orderTablePanel,middlePanel,leftPanel;
     JButton addButton, deleteButton, showButton, orderButton;
     JTextField loginTF,passwordTF,levelTF;
-    JLabel cartL,allL;
+    JLabel cartL,allL,priceSumL;
     private ResultSet myRs1 = null;
     private ResultSet myRs2 = null;
     private Statement myStmt = null;
@@ -51,11 +52,7 @@ public class MakeOrderFrame {
             myStmt.execute(sql2);
             System.out.println("transaction started");
             addOrder(20);
-            getOrderData("SELECT c.id_computer,c.type,c.ram,c.graphic,c.disk,c.system,c.price,oc.ammount\n" +
-                    "FROM ordered_computers as oc\n" +
-                    "INNER JOIN computers as c\n" +
-                    "ON oc.id_computer=c.id_computer " +
-                    "WHERE oc.id_order=@ordnr;");
+            getOrderData();
 
         }catch(SQLException ex)
         {
@@ -107,8 +104,11 @@ public class MakeOrderFrame {
         productTablePanel = new JPanel();
         orderTablePanel = new JPanel();
 
+
         cartL= new JLabel("Koszyk");
         allL= new JLabel("Wszystkie produkty");
+        priceSumL = new JLabel("Suma: 0.00");
+
 
         addButton = new JButton("+");
         addButton.addActionListener(new addButtonListener());
@@ -128,20 +128,21 @@ public class MakeOrderFrame {
         scrollPane1 = new JScrollPane(productTable);
         TableModel.setVisibleRowCount(productTable,10);
         productTablePanel.add(scrollPane1);
-        getProductData("SELECT * FROM computers");
+        getProductData();
 
         //bedzie jakas procedura ale na razie nie wiem jak ma to kupowanie wygladac w sumie;
         orderTable = new JTable(tableModel2);
         scrollPane2 = new JScrollPane(orderTable);
         TableModel.setVisibleRowCount(orderTable,10);
         orderTablePanel.add(scrollPane2);
-        getOrderData("SELECT * FROM ordered_computers");
+        getOrderData();
 
         middlePanel.setLayout(new BoxLayout(middlePanel, BoxLayout.Y_AXIS));
         middlePanel.add(allL);
         middlePanel.add(productTablePanel);
         middlePanel.add(cartL);
         middlePanel.add(orderTablePanel);
+        middlePanel.add(priceSumL);
 
         mainPanel.add(BorderLayout.CENTER,middlePanel);
         mainPanel.add(BorderLayout.EAST,leftPanel);
@@ -165,12 +166,13 @@ public class MakeOrderFrame {
         startTransaction();
     }
 
-    public void getProductData(String sql)
+    public void getProductData()
     {
         try
         {
+            String sq="call getProductsData()";
             myStmt = connection.createStatement();
-            myRs1 = myStmt.executeQuery(sql);
+            myRs1 = myStmt.executeQuery(sq);
             tm1= new TableModel(myRs1);
             tableModel1=tm1.getModel();
             productTable.setModel(tableModel1);
@@ -181,7 +183,7 @@ public class MakeOrderFrame {
         }
     }
 
-    public void getOrderData(String sql)
+    public void getOrderData()
     {
         try
         {
@@ -195,12 +197,12 @@ public class MakeOrderFrame {
             */
 
             System.out.println("GetOrderData");
+            String sq = "CALL getCartData()";
             myStmt = connection.createStatement();
-            myRs2 = myStmt.executeQuery(sql);
+            myRs2 = myStmt.executeQuery(sq);
             tm2= new TableModel(myRs2);
             tableModel2=tm2.getModel();
             orderTable.setModel(tableModel2);
-
         }catch(SQLException ex)
         {
             ex.printStackTrace();
@@ -216,8 +218,6 @@ public class MakeOrderFrame {
             {
                 myStmt = connection.createStatement();
                 int idcomp=(int)(tableModel1.getValueAt(productTable.getSelectedRow(),0));
-                //String sql = "CALL addFirstOrNextOrderedComputer('"+idcomp+"')";
-                //String sql = "CALL addFirstOrNextOrderedComputer('"+idcomp+"')";
                 String sql = "CALL addAndDeleteComputer('"+idcomp+"')";
                 myStmt.execute(sql);
                 refreshCart();
@@ -309,13 +309,27 @@ public class MakeOrderFrame {
 
     public void refreshCart()
     {
-        getOrderData("SELECT c.id_computer,c.type,c.ram,c.graphic,c.disk,c.system,c.price,oc.ammount\n" +
-                "FROM ordered_computers as oc\n" +
-                "INNER JOIN computers as c\n" +
-                "ON oc.id_computer=c.id_computer " +
-                "WHERE oc.id_order=@ordnr" +
-                " AND oc.ammount>0;");
-        getProductData("SELECT * FROM computers");
+        getOrderData();
+        getProductData();
+        refreshSum();
+    }
+
+    public void refreshSum()
+    {
+        try
+        {
+            System.out.println("sum calculating");
+            myStmt = connection.createStatement();
+            String sql = "SELECT sumCount() as ac";
+            myRs2 = myStmt.executeQuery(sql);
+            if(myRs2.next()){
+                System.out.println(myRs2.getDouble("ac"));
+                priceSumL.setText("Suma: "+myRs2.getDouble("ac"));
+            }
+        }catch(SQLException ex)
+        {
+            ex.printStackTrace();
+        }
     }
 
 }
