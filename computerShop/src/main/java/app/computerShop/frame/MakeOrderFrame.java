@@ -23,7 +23,7 @@ public class MakeOrderFrame {
     DefaultTableModel tableModel1,tableModel2;
     JScrollPane scrollPane1,scrollPane2;
     JFrame frame;
-    TableModel tm;
+    TableModel tm1,tm2;
     JPanel mainPanel, productTablePanel,orderTablePanel,middlePanel,leftPanel;
     JButton addButton, deleteButton, showButton, orderButton;
     JTextField loginTF,passwordTF,levelTF;
@@ -37,6 +37,7 @@ public class MakeOrderFrame {
     {
         this.connection=connection;
     }
+
     public void startTransaction()
     {
         try
@@ -50,6 +51,12 @@ public class MakeOrderFrame {
             myStmt.execute(sql2);
             System.out.println("transaction started");
             addOrder(20);
+            getOrderData("SELECT c.id_computer,c.type,c.ram,c.graphic,c.disk,c.system,c.price,oc.ammount\n" +
+                    "FROM ordered_computers as oc\n" +
+                    "INNER JOIN computers as c\n" +
+                    "ON oc.id_computer=c.id_computer " +
+                    "WHERE oc.id_order=@ordnr;");
+
         }catch(SQLException ex)
         {
             ex.printStackTrace();
@@ -106,6 +113,7 @@ public class MakeOrderFrame {
         addButton = new JButton("+");
         addButton.addActionListener(new addButtonListener());
         deleteButton = new JButton("-");
+        deleteButton.addActionListener(new DeleteButtonListener());
         showButton = new JButton("Pokaż");
         showButton.addActionListener(new ShowButtonListener());
         orderButton = new JButton("Zamów");
@@ -116,11 +124,11 @@ public class MakeOrderFrame {
         leftPanel.add(showButton);
         leftPanel.add(orderButton);
 
-        getProductData("SELECT * FROM computers");
         productTable = new JTable(tableModel1);
         scrollPane1 = new JScrollPane(productTable);
         TableModel.setVisibleRowCount(productTable,10);
         productTablePanel.add(scrollPane1);
+        getProductData("SELECT * FROM computers");
 
         //bedzie jakas procedura ale na razie nie wiem jak ma to kupowanie wygladac w sumie;
         orderTable = new JTable(tableModel2);
@@ -163,8 +171,9 @@ public class MakeOrderFrame {
         {
             myStmt = connection.createStatement();
             myRs1 = myStmt.executeQuery(sql);
-            TableModel tm= new TableModel(myRs1);
-            tableModel1=tm.getModel();
+            tm1= new TableModel(myRs1);
+            tableModel1=tm1.getModel();
+            productTable.setModel(tableModel1);
             System.out.println("GetProductData");
         }catch(SQLException ex)
         {
@@ -188,8 +197,8 @@ public class MakeOrderFrame {
             System.out.println("GetOrderData");
             myStmt = connection.createStatement();
             myRs2 = myStmt.executeQuery(sql);
-            TableModel tm= new TableModel(myRs2);
-            tableModel2=tm.getModel();
+            tm2= new TableModel(myRs2);
+            tableModel2=tm2.getModel();
             orderTable.setModel(tableModel2);
 
         }catch(SQLException ex)
@@ -206,13 +215,33 @@ public class MakeOrderFrame {
             try
             {
                 myStmt = connection.createStatement();
-                String sql = "CALL add_ordered_computer(1)";
+                int idcomp=(int)(tableModel1.getValueAt(productTable.getSelectedRow(),0));
+                //String sql = "CALL addFirstOrNextOrderedComputer('"+idcomp+"')";
+                //String sql = "CALL addFirstOrNextOrderedComputer('"+idcomp+"')";
+                String sql = "CALL addAndDeleteComputer('"+idcomp+"')";
                 myStmt.execute(sql);
+                refreshCart();
                 System.out.println("add ordered computer");
             }catch(SQLException ex)
             {
-                ex.printStackTrace();
+                //System.out.println(ex.getMessage());
+                if(ex.getMessage().equals("TOOMUCH"))
+                {
+                    System.out.println("Nie mamy tyle");
+                }
+                else if(ex.getMessage().equals("emptystock"))
+                {
+                    System.out.println("Nie mamy tyle");
+                }
+                else
+                {
+                    ex.printStackTrace();
+                }
+            }catch(ArrayIndexOutOfBoundsException ex)
+            {
+                System.out.println("Musisz wybrac jakis produkt");
             }
+
         }
     }
 
@@ -221,9 +250,37 @@ public class MakeOrderFrame {
         @Override
         public void actionPerformed(ActionEvent e)
         {
+
             commit();
             System.out.println("Tu jakaś ramka cyk zamówiono");
             frame.dispose();
+        }
+    }
+
+    class DeleteButtonListener implements ActionListener
+    {
+        @Override
+        public void actionPerformed(ActionEvent e)
+        {
+            try
+            {
+                System.out.println(tableModel2.getValueAt(orderTable.getSelectedRow(),0));
+                int sel=(int)(tableModel2.getValueAt(orderTable.getSelectedRow(),0));
+                String sql="CALL deleteAllOfSelectedOrderedComputers('" + sel + "')";
+                /*myStmt.execute("DELETE FROM ordered_computers where id_order=@ordnr AND id_computer = "
+                        + tableModel2.getValueAt(orderTable.getSelectedRow(),0)+" ;");
+                */
+                myStmt.execute(sql);
+                refreshCart();
+                tableModel2.fireTableDataChanged();
+            }catch(SQLException ex)
+            {
+                ex.printStackTrace();
+            }catch(ArrayIndexOutOfBoundsException ex)
+            {
+                System.out.println("Nie ma czego usunać");
+            }
+
         }
     }
 
@@ -246,13 +303,19 @@ public class MakeOrderFrame {
         @Override
         public void actionPerformed(ActionEvent e)
         {
-            getOrderData("SELECT c.id_computer,c.type,c.ram,c.graphic,c.disk,c.system,c.price,oc.ammount\n" +
-                    "FROM ordered_computers as oc\n" +
-                    "INNER JOIN computers as c\n" +
-                    "ON oc.id_computer=c.id_computer " +
-                    "WHERE oc.id_order=@ordnr;");
+            refreshCart();
         }
     }
 
+    public void refreshCart()
+    {
+        getOrderData("SELECT c.id_computer,c.type,c.ram,c.graphic,c.disk,c.system,c.price,oc.ammount\n" +
+                "FROM ordered_computers as oc\n" +
+                "INNER JOIN computers as c\n" +
+                "ON oc.id_computer=c.id_computer " +
+                "WHERE oc.id_order=@ordnr" +
+                " AND oc.ammount>0;");
+        getProductData("SELECT * FROM computers");
+    }
 
 }
