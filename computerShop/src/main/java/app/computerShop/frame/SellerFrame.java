@@ -31,6 +31,7 @@ public class SellerFrame extends UserFrame {
 		orders = new JButton("Orders");
 		orders.addActionListener(new OrderButtonListener());
 		products = new JButton("Products");
+		products.addActionListener(new ProductsButtonListener());
 		buttonsPanel.add(orders);
 
 		buttonsPanel.add(products);
@@ -38,13 +39,22 @@ public class SellerFrame extends UserFrame {
 		this.getContentPane().add(BorderLayout.CENTER,mainPanel);
 	}
 
-	class OrderButtonListener implements ActionListener
-	{
+	class OrderButtonListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e)
 		{
 			System.out.println("Go to Products");
 			AcceptOrderFrame m = new AcceptOrderFrame(connection);
+			m.start();
+		}
+	}
+	class ProductsButtonListener implements ActionListener
+	{
+		@Override
+		public void actionPerformed(ActionEvent e)
+		{
+			System.out.println("Go to Products");
+			ProductListFrame m = new ProductListFrame(connection);
 			m.start();
 		}
 	}
