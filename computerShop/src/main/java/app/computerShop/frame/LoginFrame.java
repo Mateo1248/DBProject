@@ -105,10 +105,10 @@ public class LoginFrame extends JFrame implements ActionListener {
 		if(source == loginBtn) {
 			if(!login.getText().equals("") && !password.getText().equals("") && !(userlevel.getSelectedIndex()==0)) {
 				try {
-					Connection con = getConnection(login.getText(), password.getText(), "computershop");
-					System.out.println("connected successfull!");
 					
-					if(userValidation(login.getText(), password.getText(), con, userlevel.getSelectedIndex())) {
+					if(userValidation(login.getText(), password.getText(), userlevel.getSelectedIndex())) {
+						Connection con = getConnection(login.getText(), password.getText(), "computershop");
+						System.out.println("connected successfull!");
 						System.out.println("user validation successfull!");
 						switch( userlevel.getSelectedIndex() ) {
 						
@@ -158,8 +158,9 @@ public class LoginFrame extends JFrame implements ActionListener {
 	}
 	
 	
-	private boolean userValidation(String login, String password, Connection con, int userlv) {
+	private boolean userValidation(String login, String password, int userlv) {
 		try {
+			Connection con = getConnection("validation", "validation", "computershop");
 			String []lv = {"admin", "seller", "client"};
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT Level FROM users WHERE Login LIKE '" + login + "' AND Password LIKE '" + password + "'");
@@ -169,7 +170,8 @@ public class LoginFrame extends JFrame implements ActionListener {
 					return false;
 				}
 		} 
-		catch (SQLException e) { e.printStackTrace(); }
+		catch (SQLException e) { e.printStackTrace(); } 
+		catch (ClassNotFoundException e) {e.printStackTrace();}
 		return true;
 	}
 }
