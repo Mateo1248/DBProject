@@ -137,6 +137,7 @@ public class CreateClientFrame extends JFrame implements ActionListener{
 						Statement stmt =	connection.createStatement();
 						String addclient = "CALL addClient('"+firstnameT.getText()+"','"+lastnameT.getText()+"','"+emailT.getText()+"','"+telnrT.getText()+"','"+postcodeT.getText()+"','"+cityT.getText()+"','"+addressT.getText()+"','"+loginT.getText()+"','"+passwordT.getText()+"')";
 						stmt.execute(addclient);
+						System.out.println("client registered");
 					} catch (SQLException e) {
 						/* NIE WIEM JAK TA OBSŁUGA BEDZIE GRAC Z PROCEDURA JAK TAM SIE WSTAWI SIGNAL ERRORY I BEDZIE GIT */
                         System.out.println(e.getMessage());
