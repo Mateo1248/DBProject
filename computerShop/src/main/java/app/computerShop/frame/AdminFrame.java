@@ -17,8 +17,6 @@ public class AdminFrame extends UserFrame {
 	JButton products, users, backupexport, backupimport;
 	private Connection connection;
 
-	JButton test,test2;
-
 	AdminFrame(Connection connection) {
 		super("ADMINISTRATOR", connection);
 		this.connection=connection;
@@ -44,36 +42,11 @@ public class AdminFrame extends UserFrame {
 		buttonsPanel.add(backupexport);
 		buttonsPanel.add(backupimport);
 
-		test = new JButton("testClient");
-		test.addActionListener(new Testb());
-		buttonsPanel.add(test);
-		test2 = new JButton("testSeller");
-		test2.addActionListener(new Testbb());
-		buttonsPanel.add(test2);
 
 		mainPanel.add(buttonsPanel);
 		this.getContentPane().add(BorderLayout.CENTER,mainPanel);
 	}
 
-    class Testb implements ActionListener
-    {
-        @Override
-        public void actionPerformed(ActionEvent e)
-        {
-            System.out.println("Go to Products");
-            MakeOrderFrame m= new MakeOrderFrame(connection);
-            m.start();
-        }
-    }
-	class Testbb implements ActionListener
-	{
-		@Override
-		public void actionPerformed(ActionEvent e)
-		{
-			System.out.println("Go to Products");
-			SellerFrame s= new SellerFrame(connection);
-		}
-	}
 
 	class ProductsButtonListener implements ActionListener
 	{

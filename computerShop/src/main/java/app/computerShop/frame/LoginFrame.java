@@ -25,6 +25,7 @@ public class LoginFrame extends JFrame implements ActionListener {
 	JButton loginBtn, createBtn;
 	JTextArea login, password;
 	JComboBox userlevel;
+	int id;
 	
 	public static void main(String[] args) {
 		LoginFrame lf = new LoginFrame();
@@ -118,19 +119,20 @@ public class LoginFrame extends JFrame implements ActionListener {
 							break;
 						//seller
 						case 2 :
-							new SellerFrame(con);
+							new SellerFrame(con,id);
 							break;
 						//client
 						case 3:
-							new ClientFrame(con);
+							new ClientFrame(con,id);
 						}
 					}
 					else {
 						System.out.println("user validation unsuccessfull!");
-						JOptionPane.showMessageDialog(this,"Zły poziom uprawnień!","BŁĄD",JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(this,"Błędne dane!","BŁĄD",JOptionPane.ERROR_MESSAGE);
 					}
 				} 
 				catch (ClassNotFoundException | SQLException e) {
+					e.printStackTrace();
 					System.out.println("Connected error!");
 				}
 			}
@@ -149,8 +151,7 @@ public class LoginFrame extends JFrame implements ActionListener {
 		}
 		
 	}
-	
-	
+
 	private Connection getConnection(String login, String password, String dbName) throws ClassNotFoundException, SQLException {
 		Class.forName( "com.mysql.cj.jdbc.Driver" );
 		String url = "jdbc:mysql://localhost/" + dbName + "?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
@@ -163,7 +164,19 @@ public class LoginFrame extends JFrame implements ActionListener {
 			Connection con = getConnection("validation", "validation", "computershop");
 			String []lv = {"admin", "seller", "client"};
 			Statement stmt = con.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT Level FROM users WHERE Login LIKE '" + login + "' AND Password LIKE '" + password + "'");
+			ResultSet rs = stmt.executeQuery("SELECT id_user as akka FROM users WHERE Login LIKE '" + login + "' AND Password LIKE '" + password + "'");
+			while(rs.next())
+			{
+				id=rs.getInt("akka");
+				System.out.println(id);
+			}
+			if(id==0)
+			{
+				return false;
+			}
+			System.out.println(id);
+			stmt = con.createStatement();
+			rs = stmt.executeQuery("SELECT Level FROM users WHERE Login LIKE '" + login + "' AND Password LIKE '" + password + "'");
 			while(rs.next())
 				if(!rs.getString("Level").equals(lv[userlv-1])) {
 					con.close();

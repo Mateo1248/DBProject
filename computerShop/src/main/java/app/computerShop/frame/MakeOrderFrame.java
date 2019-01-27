@@ -32,11 +32,13 @@ public class MakeOrderFrame {
     private ResultSet myRs1 = null;
     private ResultSet myRs2 = null;
     private Statement myStmt = null;
+    private int idd;
 
     //to potrzebuje miec id klienta
-    public MakeOrderFrame(Connection connection)
+    public MakeOrderFrame(Connection connection,int id)
     {
         this.connection=connection;
+        idd=id;
     }
 
     public void startTransaction()
@@ -51,7 +53,7 @@ public class MakeOrderFrame {
             String sql2 = "Start transaction";
             myStmt.execute(sql2);
             System.out.println("transaction started");
-            addOrder(20);
+            addOrder(idd);
             getOrderData();
 
         }catch(SQLException ex)

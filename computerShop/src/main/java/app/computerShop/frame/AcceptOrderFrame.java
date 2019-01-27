@@ -101,7 +101,7 @@ public class AcceptOrderFrame {
             {
                 myStmt = connection.createStatement();
                 int id = (int) (tableModel.getValueAt(table.getSelectedRow(), 0));
-                String sql = "UPDATE orders SET state='finished' WHERE id_order = " + id;
+                String sql = "CALL finishOrder("+ id +")";
                 myStmt.execute(sql);
                 getOrderData();
                 System.out.println(id);

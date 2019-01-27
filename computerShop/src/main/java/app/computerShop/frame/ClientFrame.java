@@ -9,8 +9,12 @@ import java.sql.Connection;
 public class ClientFrame extends UserFrame {
     JPanel mainPanel;
     JButton orders,products;
-	ClientFrame(Connection connection) {
+    Connection connection;
+    private int myid;
+	ClientFrame(Connection connection,int id) {
         super("KLIENT", connection);
+        this.myid=id;
+        this.connection=connection;
         mainPanel = new JPanel();
         mainPanel.setLayout(new GridLayout(3,0));
 
@@ -21,7 +25,9 @@ public class ClientFrame extends UserFrame {
 
         JPanel buttonsPanel = new JPanel();
         orders = new JButton("Orders");
+        orders.addActionListener(new OrdersButtonListener());
         products = new JButton("Products");
+        products.addActionListener(new ProductsButtonListener());
         buttonsPanel.add(orders);
 
         buttonsPanel.add(products);
@@ -29,5 +35,26 @@ public class ClientFrame extends UserFrame {
         this.getContentPane().add(BorderLayout.CENTER,mainPanel);
 	}
 
+    class OrdersButtonListener implements ActionListener
+    {
+        @Override
+        public void actionPerformed(ActionEvent e)
+        {
+            System.out.println("Go to Products");
+            MakeOrderFrame m= new MakeOrderFrame(connection,myid);
+            m.start();
+        }
+    }
+
+    class ProductsButtonListener implements ActionListener
+    {
+        @Override
+        public void actionPerformed(ActionEvent e)
+        {
+            System.out.println("Go to Products");
+            ProductListFrame prodlf= new ProductListFrame(connection);
+            prodlf.start();
+        }
+    }
 
 }

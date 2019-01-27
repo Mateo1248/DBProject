@@ -15,10 +15,12 @@ public class SellerFrame extends UserFrame {
 	JButton orders,products;
 	private Connection connection;
 	private Statement myStmt = null;
-	SellerFrame(Connection connection) {
+	int myid;
+	SellerFrame(Connection connection,int myid) {
 		super("Seller", connection);
 		this.connection=connection;
-		setSessionID(22);
+		this.myid=myid;
+		setSessionID(myid);
 		mainPanel = new JPanel();
 		mainPanel.setLayout(new GridLayout(3,0));
 
@@ -66,7 +68,7 @@ public class SellerFrame extends UserFrame {
 			myStmt = connection.createStatement();
 			String sql = "Call setSessionID('"+id+"')";
 			myStmt.execute(sql);
-			System.out.println("id set");
+			System.out.println("id set to" + id);
 		}catch(SQLException ex)
 		{
 			ex.printStackTrace();

@@ -103,8 +103,9 @@ public class UserListFrame {
             try
             {
                 System.out.println("Usunięto wiersz");
-                myStmt.execute("DELETE FROM users where id_user = "
-                        + tableModel.getValueAt(table.getSelectedRow(),0)+" ;");
+                System.out.println(tableModel.getValueAt(table.getSelectedRow(),0));
+                myStmt.execute("CALL deleteUser("
+                        + tableModel.getValueAt(table.getSelectedRow(),0)+" );");
                 tableModel.fireTableDataChanged();
             }catch(SQLException ex)
             {
