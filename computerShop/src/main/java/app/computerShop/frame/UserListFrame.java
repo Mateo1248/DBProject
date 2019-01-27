@@ -102,14 +102,23 @@ public class UserListFrame {
         {
             try
             {
-                System.out.println("Usunięto wiersz");
-                System.out.println(tableModel.getValueAt(table.getSelectedRow(),0));
-                myStmt.execute("CALL deleteUser("
-                        + tableModel.getValueAt(table.getSelectedRow(),0)+" );");
-                tableModel.fireTableDataChanged();
+                if(tableModel.getValueAt(table.getSelectedRow(),0)==null)
+                {
+                    System.out.println("Musisz coś wybrać");
+                }
+                else
+                {
+                    myStmt.execute("CALL deleteUser("
+                            + tableModel.getValueAt(table.getSelectedRow(), 0) + " );");
+
+                    System.out.println("Usunięto wiersz");
+                }
             }catch(SQLException ex)
             {
                 ex.printStackTrace();
+            }catch(NullPointerException ex)
+            {
+                System.out.println("nie ma co usuwac");
             }
 
         }
@@ -165,9 +174,25 @@ public class UserListFrame {
                     tableModel=tm.getModel();
                     table.setModel(tableModel);
                 }
-            } catch(SQLException ex)
+
+            }catch(SQLSyntaxErrorException ex)
             {
-                ex.printStackTrace();
+                if(ex.getMessage().startsWith("SELECT command denied"))
+                {
+                    System.out.println("brak uprawnien");
+                    JOptionPane.showMessageDialog(frame,"Brak uprawnień","BŁĄD",JOptionPane.ERROR_MESSAGE);
+                }
+            }
+            catch(SQLException ex){
+                if(ex.getMessage().startsWith("execute"))
+                {
+                    System.out.println("brak uprawnien");
+                    JOptionPane.showMessageDialog(frame, "Brak uprawnień", "BŁĄD", JOptionPane.ERROR_MESSAGE);
+                }
+                else
+                {
+                    System.out.println("Brak uprawnień");
+                }
             }
         }
     }
@@ -191,6 +216,5 @@ public class UserListFrame {
         }
         System.out.println("select * from users" + whereClause);
         return "select * from users" + whereClause;
-
     }
 }

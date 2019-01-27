@@ -96,7 +96,25 @@ public class ProductListFrame {
                 System.out.println("computer added");
             }catch(SQLException ex)
             {
-                ex.printStackTrace();
+                if (ex.getMessage().equals("brakuprawnien"))
+                {
+                    System.out.println("brak uprawnien");
+                    JOptionPane.showMessageDialog(frame,"Brak uprawnień","BŁĄD",JOptionPane.ERROR_MESSAGE);
+                }
+                else if (ex.getMessage().startsWith("execute command"))
+                {
+                    System.out.println("brak uprawnien");
+                    JOptionPane.showMessageDialog(frame,"Brak uprawnień","BŁĄD",JOptionPane.ERROR_MESSAGE);
+                }
+                else if (ex.getMessage().startsWith("brakuprawnien"))
+                {
+                    System.out.println("brak uprawnien");
+                    JOptionPane.showMessageDialog(frame,"Brak uprawnień","BŁĄD",JOptionPane.ERROR_MESSAGE);
+                }
+                else
+                {
+                    ex.printStackTrace();
+                }
             }catch(ArrayIndexOutOfBoundsException ex)
             {
                 System.out.println("wybierz cos");

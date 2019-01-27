@@ -101,6 +101,11 @@ public class AddSellerFrame {
                 {
                     JOptionPane.showMessageDialog(frame,"Login zajęty","BŁĄD",JOptionPane.ERROR_MESSAGE);
                 }
+                else if(ex.getMessage().startsWith("execute"))
+                {
+                    System.out.println("brak uprawnien");
+                    JOptionPane.showMessageDialog(frame, "Brak uprawnień", "BŁĄD", JOptionPane.ERROR_MESSAGE);
+                }
                 else
                 {
                     ex.printStackTrace();

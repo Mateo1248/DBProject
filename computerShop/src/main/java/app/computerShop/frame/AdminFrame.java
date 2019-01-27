@@ -14,7 +14,7 @@ import java.sql.Statement;
 public class AdminFrame extends UserFrame {
 
 	JPanel mainPanel;
-	JButton products, users, backupexport, backupimport;
+	JButton products, users, backupexport, backupimport,logiButton;
 	private Connection connection;
 
 	AdminFrame(Connection connection) {
@@ -37,10 +37,13 @@ public class AdminFrame extends UserFrame {
 		backupexport.addActionListener(new ExportBackupButtonListener());
 		backupimport = new JButton("Import DB");
 		backupimport.addActionListener(new ImportBackupButtonListener());
+		logiButton = new JButton("logi");
+		logiButton.addActionListener(new LogiButtonListener());
 		buttonsPanel.add(products);
 		buttonsPanel.add(users);
 		buttonsPanel.add(backupexport);
 		buttonsPanel.add(backupimport);
+		buttonsPanel.add(logiButton);
 
 
 		mainPanel.add(buttonsPanel);
@@ -67,6 +70,18 @@ public class AdminFrame extends UserFrame {
 		{
 			System.out.println("Go to Users");
 			UserListFrame usrlf= new UserListFrame(connection);
+			usrlf.start();
+			System.out.println("Go to orders");
+		}
+	}
+
+	class LogiButtonListener implements ActionListener
+	{
+		@Override
+		public void actionPerformed(ActionEvent e)
+		{
+			System.out.println("Go to Logi");
+			LogiFrame usrlf= new LogiFrame(connection);
 			usrlf.start();
 			System.out.println("Go to orders");
 		}
@@ -150,6 +165,7 @@ public class AdminFrame extends UserFrame {
 		 	String mysqldumpdir = System.getProperty("user.dir") + "\\dumptool\\mysqldump.exe";
 		 	mysqldumpdir = mysqldumpdir.replace('\\', '/');
 		 	String executeCmd=mysqldumpdir + " -uadmin -padmin -B computershop -r " + goalpath;
+		 	System.out.println(executeCmd);
 		 	Process runtimeProcess;
 		    try {
 		        runtimeProcess = Runtime.getRuntime().exec(executeCmd);

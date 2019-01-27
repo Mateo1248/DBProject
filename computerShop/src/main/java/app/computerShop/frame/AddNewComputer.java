@@ -114,7 +114,20 @@ public class AddNewComputer extends JFrame implements ActionListener {
             }
             catch(SQLException ex)
             {
-                ex.printStackTrace();
+                if(ex.getMessage().equals("brakuprawnien"))
+                {
+                    System.out.println("brak uprawnien");
+                    JOptionPane.showMessageDialog(this,"Brak uprawnień","BŁĄD",JOptionPane.ERROR_MESSAGE);
+                }
+                else if (ex.getMessage().startsWith("execute command"))
+                {
+                    System.out.println("brak uprawnien");
+                    JOptionPane.showMessageDialog(this,"Brak uprawnień","BŁĄD",JOptionPane.ERROR_MESSAGE);
+                }
+                else
+                {
+                    ex.printStackTrace();
+                }
             }
 
         }

@@ -12,7 +12,7 @@ import java.sql.Statement;
 public class SellerFrame extends UserFrame {
 
 	JPanel mainPanel;
-	JButton orders,products;
+	JButton orders,products,workerButton,logiButton;
 	private Connection connection;
 	private Statement myStmt = null;
 	int myid;
@@ -34,9 +34,16 @@ public class SellerFrame extends UserFrame {
 		orders.addActionListener(new OrderButtonListener());
 		products = new JButton("Products");
 		products.addActionListener(new ProductsButtonListener());
+		workerButton=new JButton("Pracownicy");
+		workerButton.addActionListener(new WorkersButtonListener());
+		logiButton = new JButton("logi");
+		logiButton.addActionListener(new LogiButtonListener());
 		buttonsPanel.add(orders);
-
 		buttonsPanel.add(products);
+		buttonsPanel.add(workerButton);
+		buttonsPanel.add(logiButton);
+
+
 		mainPanel.add(buttonsPanel);
 		this.getContentPane().add(BorderLayout.CENTER,mainPanel);
 	}
@@ -60,6 +67,17 @@ public class SellerFrame extends UserFrame {
 			m.start();
 		}
 	}
+	class LogiButtonListener implements ActionListener
+	{
+		@Override
+		public void actionPerformed(ActionEvent e)
+		{
+			System.out.println("Go to Logi");
+			LogiFrame usrlf= new LogiFrame(connection);
+			usrlf.start();
+			System.out.println("Go to orders");
+		}
+	}
 
 	public void setSessionID(int id)
 	{
@@ -72,6 +90,17 @@ public class SellerFrame extends UserFrame {
 		}catch(SQLException ex)
 		{
 			ex.printStackTrace();
+		}
+	}
+
+	class WorkersButtonListener implements ActionListener
+	{
+		@Override
+		public void actionPerformed(ActionEvent e)
+		{
+			System.out.println("Go to Users");
+			UserListFrame usrlf= new UserListFrame(connection);
+			usrlf.start();
 		}
 	}
 
